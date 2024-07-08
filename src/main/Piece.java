@@ -34,7 +34,7 @@ public abstract class Piece {
 
     private void loadImage() {
         try {
-            image = ImageIO.read(new File("assets/" + getImageFileName()));
+            image = ImageIO.read(new File(getImageFileName()));
         } catch (IOException e) {
             e.printStackTrace();
         }

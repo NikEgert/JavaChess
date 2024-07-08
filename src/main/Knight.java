@@ -1,7 +1,7 @@
 package main;
-public class Pawn extends Piece {
+public class Knight extends Piece {
 
-    public Pawn(int x, int y, Boolean colour){
+    public Knight(int x, int y, Boolean colour){
         super(x, y, colour);
     }
 
@@ -11,6 +11,6 @@ public class Pawn extends Piece {
     
     @Override
     public String getImageFileName(){
-        return colour ? "src/assets/white/P.png" : "src/assets/black/P.png";
+        return colour ? "src/assets/white/Kn.png" : "src/assets/black/Kn.png";
     }
 }
