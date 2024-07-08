@@ -3,9 +3,27 @@ package main;
 public class PieceUpdate {
     Piece[][] grid;
     boolean turn;
+    int toX;
+    int toY;
+    boolean start;
+    Piece piece;
 
-    public PieceUpdate(){
+    public PieceUpdate() {
         grid = new Piece[8][8];
+        start = true;
+    }
+
+    public void setPiece(int toX, int toY, Piece piece){
+        grid[toX][toY] = piece;
+    }
+
+    public Piece erasePiece(int fromX, int fromY){
+        grid[fromX][fromY] = null;
+        return grid[fromX][fromY];
+    }
+
+    public boolean getStart(){
+        return start;
     }
 
     public boolean getTurn(){
@@ -73,5 +91,17 @@ public class PieceUpdate {
             return null;
         }
         return grid[x][y];
+    }
+
+    public void seeBoard(){
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid[i].length; j++) {
+                if (grid[j][i] != null) {
+                    System.out.print(grid[j][i].toString() + " ");
+                } else {
+                    System.out.print("null ");
+                }
+            }
+        }
     }
 }

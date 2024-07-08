@@ -44,4 +44,8 @@ public abstract class Piece {
         g.drawImage(image, x * 100, y * 100, null);
     }
 
+    public BufferedImage getImage(){
+        return image;
+    }
+
 }
