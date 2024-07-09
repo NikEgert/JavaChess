@@ -40,8 +40,8 @@ public abstract class Piece {
         }
     }
 
-    public void draw(Graphics g) {
-        g.drawImage(image, x * 100, y * 100, null);
+    public void draw(Graphics2D g2, int tileSize) {
+        g2.drawImage(image, x * tileSize, y * tileSize, null);
     }
 
     public BufferedImage getImage(){

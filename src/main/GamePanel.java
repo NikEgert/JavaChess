@@ -14,10 +14,14 @@ public class GamePanel extends JPanel implements Runnable, MouseListener, MouseM
 
     public int mouseX;
     public int mouseY;
+    public int matrixColIndex;
+    public int matrixRowIndex;
+    
     public boolean mouseClicked;
     public boolean mouseFollow;
 
     public Piece clickedPiece;
+    public Piece setPiece;
 
     public GamePanel(LayoutManager layout){
         super(layout);
@@ -48,62 +52,64 @@ public class GamePanel extends JPanel implements Runnable, MouseListener, MouseM
         }
     }
 
-    public void paintComponent(Graphics g){
+    @Override
+    public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        Graphics2D g2 = (Graphics2D)g;
+        Graphics2D g2 = (Graphics2D) g;
 
-        if (mouseClicked) {
-            g2.drawImage(clickedPiece.getImage(), mouseX - 50, mouseY - 50, null);
-        }
-
-        //drawing grid
+        // Draw grid
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
-                g2.drawLine(0, i*tileSize, boardWidth, i*tileSize);
-                g2.drawLine(i*tileSize, 0, i*tileSize, boardHeight);
+                g2.drawLine(0, j * tileSize, boardWidth, j * tileSize);
+                g2.drawLine(i * tileSize, 0, i * tileSize, boardHeight);
             }
         }
 
-        //intialising pieces
-        if (gameStart){
-            for (int i = 0; i < 8; i++) {
-                for (int j = 0; j < 8; j++) {
-                    Piece piece = pieceUpdate.getPieceAt(i, j);
-                    if (piece != null) {
-                        piece.draw(g2);
-                    }
+        Piece[][] grid = pieceUpdate.grid;
+
+        // Draw pieces
+        for (int i = 7; i >= 0; i--) {
+            for (int j = 0; j < 8; j++) {
+                Piece piece = grid[i][j];
+                if (piece != null) {
+                    piece.draw(g2, tileSize);
                 }
             }
+        }
+
+        if (mouseFollow && clickedPiece != null) {
+            g2.drawImage(clickedPiece.getImage(), mouseX - 50, mouseY - 50, null);
         }
     }
     
     @Override
-        public void mouseClicked(MouseEvent e) {
-            int x = (e.getX() + 50) / 100; // Calculate grid X position based on mouse click
-            int y = (e.getY() + 50) / 100; // Calculate grid Y position based on mouse click
-            clickedPiece = pieceUpdate.getPieceAt(x, y); // Get the piece at the clicked grid position
-            System.out.println(pieceUpdate.grid[x][y].toString());
-            pieceUpdate.erasePiece(x, y);
-            if (pieceUpdate.erasePiece(x, y) == null){
-                System.out.println("null");
-            }else{
-                System.out.println(pieceUpdate.erasePiece(x, y).toString());
-            }
-            
-            if (clickedPiece == null && mouseFollow) {
-                // Place the piece at the current mouse position
-                pieceUpdate.setPiece(x, y, clickedPiece);
-                
-                // Reset states after placing the piece
-                mouseFollow = false;
-                mouseClicked = false;
-                
-                repaint();
-            } else {
-                mouseClicked = true;
-            }
+    public void mouseClicked(MouseEvent e) {
+        int x = e.getX();
+        int y = e.getY();
+        matrixColIndex = x / tileSize;
+        matrixRowIndex = y / tileSize;
+
+        // Ensure indices are within bounds
+        if (matrixRowIndex < 0) matrixRowIndex = 0;
+        if (matrixRowIndex >= 8) matrixRowIndex = 7;
+        if (matrixColIndex < 0) matrixColIndex = 0;
+        if (matrixColIndex >= 8) matrixColIndex = 7;
+
+        // Get the piece at the clicked position
+        clickedPiece = pieceUpdate.getPieceAt(matrixColIndex, matrixRowIndex);
+
+        if (clickedPiece != null) {
+            setPiece = clickedPiece;
+            pieceUpdate.erasePiece(matrixColIndex, matrixRowIndex);
+            mouseFollow = true;
+            pieceUpdate.printBoard();
+        } else {
+            pieceUpdate.setPiece(matrixColIndex, matrixRowIndex, setPiece);
+            pieceUpdate.printBoard();
+            mouseFollow = false;
         }
+    }
 
 
     @Override
@@ -124,11 +130,9 @@ public class GamePanel extends JPanel implements Runnable, MouseListener, MouseM
 
     @Override
     public void mouseMoved(MouseEvent e) {
-        if (mouseClicked){
+        if (mouseFollow){
             mouseX = e.getX();
             mouseY = e.getY();
-            mouseFollow = true;
-            System.out.println(mouseX + "," + mouseY);
         }
     }
 

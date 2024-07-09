@@ -10,7 +10,6 @@ public class PieceUpdate {
 
     public PieceUpdate() {
         grid = new Piece[8][8];
-        start = true;
     }
 
     public void setPiece(int toX, int toY, Piece piece){
@@ -18,8 +17,9 @@ public class PieceUpdate {
     }
 
     public Piece erasePiece(int fromX, int fromY){
+        Piece removedPiece = grid[fromX][fromY];
         grid[fromX][fromY] = null;
-        return grid[fromX][fromY];
+        return removedPiece;
     }
 
     public boolean getStart(){
@@ -87,21 +87,25 @@ public class PieceUpdate {
     }
 
     public Piece getPieceAt(int x, int y) {
-        if (x < 0 || x >= 8 || y < 0 || y >= 8) {
-            return null;
-        }
         return grid[x][y];
     }
 
-    public void seeBoard(){
-        for (int i = 0; i < grid.length; i++) {
-            for (int j = 0; j < grid[i].length; j++) {
-                if (grid[j][i] != null) {
-                    System.out.print(grid[j][i].toString() + " ");
+    public void printBoard() {
+        for (int i = 7; i >= 0; i--) {
+            for (int j = 0; j < 8; j++) {
+                Piece piece = grid[j][i];
+                if (piece != null) {
+                    System.out.print(piece.toString() + " ");
                 } else {
                     System.out.print("null ");
                 }
             }
+            System.out.println();
         }
     }
+
+    public Piece[][] getGrid(){
+        return grid;
+    }
+
 }
