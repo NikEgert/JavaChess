@@ -2,18 +2,16 @@ package main;
 
 public class PieceUpdate {
     Piece[][] grid;
-    boolean turn;
-    int toX;
-    int toY;
-    boolean start;
-    Piece piece;
 
     public PieceUpdate() {
         grid = new Piece[8][8];
     }
 
     public void setPiece(int toX, int toY, Piece piece){
-        grid[toX][toY] = piece;
+        if (piece != null) {
+            piece.setPosition(toX, toY); // Ensure the piece's internal position is updated
+            grid[toX][toY] = piece;
+        }
     }
 
     public Piece erasePiece(int fromX, int fromY){
@@ -22,14 +20,6 @@ public class PieceUpdate {
         return removedPiece;
     }
 
-    public boolean getStart(){
-        return start;
-    }
-
-    public boolean getTurn(){
-        return turn;
-    }
-    
     public void initialPositions() {
         for (int i = 0; i < grid.length; i++) {
             for (int j = 0; j < grid[i].length; j++) {
@@ -37,7 +27,7 @@ public class PieceUpdate {
                 // Pawn
                 if (j == 1) {
                     grid[i][j] = new Pawn(i, j, false);
-                    
+
                 } else if (j == 6) {
                     grid[i][j] = new Pawn(i, j, true);
                 }
@@ -81,7 +71,6 @@ public class PieceUpdate {
                 } else if (j == 7 && i == 3){
                     grid[i][j] = new Queen(i, j, true);
                 }
-
             }
         }
     }
@@ -107,5 +96,4 @@ public class PieceUpdate {
     public Piece[][] getGrid(){
         return grid;
     }
-
 }

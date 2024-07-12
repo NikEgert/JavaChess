@@ -17,28 +17,28 @@ public class GamePanel extends JPanel implements Runnable, MouseListener, MouseM
     public int matrixColIndex;
     public int matrixRowIndex;
     
-    public boolean mouseClicked;
     public boolean mouseFollow;
 
     public Piece clickedPiece;
-    public Piece setPiece;
+
+    public boolean turn;
 
     public GamePanel(LayoutManager layout){
         super(layout);
         this.addMouseListener(this);
         this.addMouseMotionListener(this);
         this.setPreferredSize(new Dimension(boardWidth, boardHeight));
-        this.setBackground(Color.LIGHT_GRAY);
+        this.setBackground(new Color(177,228,185));
         this.setDoubleBuffered(true);
         pieceUpdate = new PieceUpdate();
         pieceUpdate.initialPositions();
+        this.turn = true;
     }
 
     public void startGameThread(){
         gameThread = new Thread(this);
         gameThread.start();
     }
-
 
     @Override
     public void run() {
@@ -58,18 +58,20 @@ public class GamePanel extends JPanel implements Runnable, MouseListener, MouseM
 
         Graphics2D g2 = (Graphics2D) g;
 
-        // Draw grid
+        // Draw colour squares
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
-                g2.drawLine(0, j * tileSize, boardWidth, j * tileSize);
-                g2.drawLine(i * tileSize, 0, i * tileSize, boardHeight);
+                if ((i + j) % 2 == 0) {
+                    g2.setColor(new Color(112,162,163));
+                    g2.fillRect(i * tileSize, j * tileSize, tileSize, tileSize);
+                }
             }
         }
 
-        Piece[][] grid = pieceUpdate.grid;
+        Piece[][] grid = pieceUpdate.getGrid();
 
         // Draw pieces
-        for (int i = 7; i >= 0; i--) {
+        for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 Piece piece = grid[i][j];
                 if (piece != null) {
@@ -79,54 +81,12 @@ public class GamePanel extends JPanel implements Runnable, MouseListener, MouseM
         }
 
         if (mouseFollow && clickedPiece != null) {
-            g2.drawImage(clickedPiece.getImage(), mouseX - 50, mouseY - 50, null);
-        }
-    }
-    
-    @Override
-    public void mouseClicked(MouseEvent e) {
-        int x = e.getX();
-        int y = e.getY();
-        matrixColIndex = x / tileSize;
-        matrixRowIndex = y / tileSize;
-
-        // Ensure indices are within bounds
-        if (matrixRowIndex < 0) matrixRowIndex = 0;
-        if (matrixRowIndex >= 8) matrixRowIndex = 7;
-        if (matrixColIndex < 0) matrixColIndex = 0;
-        if (matrixColIndex >= 8) matrixColIndex = 7;
-
-        // Get the piece at the clicked position
-        clickedPiece = pieceUpdate.getPieceAt(matrixColIndex, matrixRowIndex);
-
-        if (clickedPiece != null) {
-            setPiece = clickedPiece;
-            pieceUpdate.erasePiece(matrixColIndex, matrixRowIndex);
-            mouseFollow = true;
-            pieceUpdate.printBoard();
-        } else {
-            pieceUpdate.setPiece(matrixColIndex, matrixRowIndex, setPiece);
-            pieceUpdate.printBoard();
-            mouseFollow = false;
+            g2.drawImage(clickedPiece.getImage(), mouseX - tileSize / 2, mouseY - tileSize / 2, tileSize, tileSize, null);
         }
     }
 
-
     @Override
-    public void mousePressed(MouseEvent e) {
-    }
-
-    @Override
-    public void mouseReleased(MouseEvent e) {
-    }
-
-    @Override
-    public void mouseEntered(MouseEvent e) {
-    }
-
-    @Override
-    public void mouseExited(MouseEvent e) {
-    }
+    public void mouseClicked(MouseEvent e) {}
 
     @Override
     public void mouseMoved(MouseEvent e) {
@@ -137,7 +97,52 @@ public class GamePanel extends JPanel implements Runnable, MouseListener, MouseM
     }
 
     @Override
-    public void mouseDragged(MouseEvent e) {
-        // not used
+    public void mousePressed(MouseEvent e) {}
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+        int x = e.getX();
+        int y = e.getY();
+        matrixColIndex = x / tileSize;
+        matrixRowIndex = y / tileSize;
+
+        if (matrixRowIndex < 0) matrixRowIndex = 0;
+        if (matrixRowIndex >= 8) matrixRowIndex = 7;
+        if (matrixColIndex < 0) matrixColIndex = 0;
+        if (matrixColIndex >= 8) matrixColIndex = 7;
+
+        if (clickedPiece == null) {
+            clickedPiece = pieceUpdate.getPieceAt(matrixColIndex, matrixRowIndex);
+            Boolean colour = clickedPiece.getColour();
+            if (colour != turn){
+                System.out.println("Wrong turn");
+                clickedPiece = null;
+            }else{
+                if (clickedPiece != null) {
+                    pieceUpdate.erasePiece(matrixColIndex, matrixRowIndex);
+                    mouseFollow = true;
+                    pieceUpdate.printBoard();
+                }
+            }
+        } else {
+            pieceUpdate.setPiece(matrixColIndex, matrixRowIndex, clickedPiece);
+            clickedPiece = null;
+            mouseFollow = false;
+            if (turn == false){
+                turn = true;
+            } else{
+                turn = false;
+            }
+            pieceUpdate.printBoard();
+        }
     }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {}
+
+    @Override
+    public void mouseExited(MouseEvent e) {}
+
+    @Override
+    public void mouseDragged(MouseEvent e) {}
 }

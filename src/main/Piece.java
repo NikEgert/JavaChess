@@ -18,16 +18,21 @@ public abstract class Piece {
         loadImage();
     }
 
-    public boolean getColour(boolean colour){
+    public boolean getColour(){
         return colour;
     }
 
-    public float getX(){
+    public int getX(){
         return x;
     }
 
-    public float getY(){
+    public int getY(){
         return y;
+    }
+
+    public void setPosition(int x, int y) {
+        this.x = x;
+        this.y = y;
     }
 
     protected abstract String getImageFileName();
@@ -41,11 +46,10 @@ public abstract class Piece {
     }
 
     public void draw(Graphics2D g2, int tileSize) {
-        g2.drawImage(image, x * tileSize, y * tileSize, null);
+        g2.drawImage(image, x * tileSize, y * tileSize, tileSize, tileSize, null);
     }
 
     public BufferedImage getImage(){
         return image;
     }
-
 }
