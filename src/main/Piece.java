@@ -46,7 +46,7 @@ public abstract class Piece {
     }
 
     public void draw(Graphics2D g2, int tileSize) {
-        g2.drawImage(image, x * tileSize, y * tileSize, tileSize, tileSize, null);
+        g2.drawImage(image, x * tileSize, y * tileSize, tileSize - 5, tileSize - 5, null);
     }
 
     public BufferedImage getImage(){
