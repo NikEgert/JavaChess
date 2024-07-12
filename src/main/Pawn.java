@@ -11,6 +11,6 @@ public class Pawn extends Piece {
     
     @Override
     public String getImageFileName(){
-        return colour ? "src/assets/white/P.png" : "src/assets/black/P.png";
+        return colour ? "src/assets/white/Pawn.png" : "src/assets/black/Pawn.png";
     }
 }

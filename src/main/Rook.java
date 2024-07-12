@@ -11,6 +11,6 @@ public class Rook extends Piece {
     
     @Override
     public String getImageFileName(){
-        return colour ? "src/assets/white/R.png" : "src/assets/black/R.png";
+        return colour ? "src/assets/white/Rook.png" : "src/assets/black/Rook.png";
     }
 }

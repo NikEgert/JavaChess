@@ -11,6 +11,6 @@ public class Bishop extends Piece {
 
     @Override
     public String getImageFileName(){
-        return colour ? "src/assets/white/B.png" : "src/assets/black/B.png";
+        return colour ? "src/assets/white/Bishop.png" : "src/assets/black/Bishop.png";
     }
 }

@@ -11,6 +11,6 @@ public class Queen extends Piece {
     
     @Override
     public String getImageFileName(){
-        return colour ? "src/assets/white/Q.png" : "src/assets/black/Q.png";
+        return colour ? "src/assets/white/Queen.png" : "src/assets/black/Queen.png";
     }
 }

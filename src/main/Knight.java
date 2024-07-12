@@ -11,6 +11,6 @@ public class Knight extends Piece {
     
     @Override
     public String getImageFileName(){
-        return colour ? "src/assets/white/Kn.png" : "src/assets/black/Kn.png";
+        return colour ? "src/assets/white/Knight.png" : "src/assets/black/Knight.png";
     }
 }
