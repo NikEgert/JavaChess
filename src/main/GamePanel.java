@@ -28,7 +28,7 @@ public class GamePanel extends JPanel implements Runnable, MouseListener, MouseM
         this.addMouseListener(this);
         this.addMouseMotionListener(this);
         this.setPreferredSize(new Dimension(boardWidth, boardHeight));
-        this.setBackground(new Color(177,228,185));
+        this.setBackground(new Color(112,162,163));
         this.setDoubleBuffered(true);
         pieceUpdate = new PieceUpdate();
         pieceUpdate.initialPositions();
@@ -62,7 +62,7 @@ public class GamePanel extends JPanel implements Runnable, MouseListener, MouseM
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 if ((i + j) % 2 == 0) {
-                    g2.setColor(new Color(112,162,163));
+                    g2.setColor(new Color(177,228,185));
                     g2.fillRect(i * tileSize, j * tileSize, tileSize, tileSize);
                 }
             }

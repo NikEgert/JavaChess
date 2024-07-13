@@ -9,7 +9,7 @@ public class PieceUpdate {
 
     public void setPiece(int toX, int toY, Piece piece){
         if (piece != null) {
-            piece.setPosition(toX, toY); // Ensure the piece's internal position is updated
+            piece.setPosition(toX , toY); // Ensure the piece's internal position is updated
             grid[toX][toY] = piece;
         }
     }
@@ -95,5 +95,38 @@ public class PieceUpdate {
 
     public Piece[][] getGrid(){
         return grid;
+    }
+
+    public boolean isVerticalPathClear(int startX, int startY, int endY, boolean colour){
+        int step = (startY < endY) ? 1 : -1;
+        for (int y = startY; y <= endY; y += step){
+            if (getPieceAt(startX, y) != null){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean isHorizontalPathClear(int startX, int startY, int endX, boolean colour){
+        int step = (startX < endX) ? 1 : -1;
+        for (int x = startX; x <= endX; x += step){
+            if (getPieceAt(x, startY) != null){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean isDiagonalPathClear(int startX, int startY, int endY, int endX, boolean colour){
+        int x = startX;
+        int y = startY;
+        while (x <= endX && y <= endY){
+                if (getPieceAt(x, y) != null){
+                    return true;
+                }
+            x++;
+            y++;
+        }
+        return false;
     }
 }

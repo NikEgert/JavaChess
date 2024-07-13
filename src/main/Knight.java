@@ -1,7 +1,7 @@
 package main;
 public class Knight extends Piece {
 
-    public Knight(int x, int y, Boolean colour){
+    public Knight(int x, int y, boolean colour){
         super(x, y, colour);
     }
 

@@ -10,11 +10,13 @@ public abstract class Piece {
     protected int y;
     protected boolean colour;
     protected BufferedImage image;
+    protected int moveCount;
 
     public Piece(int x, int y, boolean colour){
         this.x = x;
         this.y = y;
         this.colour = colour;
+        this.moveCount = 0;
         loadImage();
     }
 

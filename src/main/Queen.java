@@ -1,7 +1,7 @@
 package main;
 public class Queen extends Piece {
 
-    public Queen(int x, int y, Boolean colour){
+    public Queen(int x, int y, boolean colour){
         super(x, y, colour);
     }
 
