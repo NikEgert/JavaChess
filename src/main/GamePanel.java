@@ -1,4 +1,5 @@
 package main;
+
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -16,7 +17,7 @@ public class GamePanel extends JPanel implements Runnable, MouseListener, MouseM
     public int mouseY;
     public int matrixColIndex;
     public int matrixRowIndex;
-    
+
     public boolean mouseFollow;
 
     public Piece clickedPiece;
@@ -26,19 +27,19 @@ public class GamePanel extends JPanel implements Runnable, MouseListener, MouseM
     private int originalX = -1;
     private int originalY = -1;
 
-    public GamePanel(LayoutManager layout){
+    public GamePanel(LayoutManager layout) {
         super(layout);
         this.addMouseListener(this);
         this.addMouseMotionListener(this);
         this.setPreferredSize(new Dimension(boardWidth, boardHeight));
-        this.setBackground(new Color(112,162,163));
+        this.setBackground(new Color(112, 162, 163));
         this.setDoubleBuffered(true);
         pieceUpdate = new PieceUpdate();
         pieceUpdate.initialPositions();
         this.turn = true;
     }
 
-    public void startGameThread(){
+    public void startGameThread() {
         gameThread = new Thread(this);
         gameThread.start();
     }
@@ -65,7 +66,7 @@ public class GamePanel extends JPanel implements Runnable, MouseListener, MouseM
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 if ((i + j) % 2 == 0) {
-                    g2.setColor(new Color(177,228,185));
+                    g2.setColor(new Color(177, 228, 185));
                     g2.fillRect(i * tileSize, j * tileSize, tileSize, tileSize);
                 }
             }
@@ -84,21 +85,26 @@ public class GamePanel extends JPanel implements Runnable, MouseListener, MouseM
         }
 
         if (mouseFollow && clickedPiece != null) {
-            g2.drawImage(clickedPiece.getImage(), mouseX - tileSize / 2, mouseY - tileSize / 2, tileSize, tileSize, null);
+            g2.drawImage(clickedPiece.getImage(), mouseX - tileSize / 2, mouseY - tileSize / 2, tileSize, tileSize,
+                    null);
         }
     }
 
-    public int getMatrixRowIndex(int y){
+    public int getMatrixRowIndex(int y) {
         matrixRowIndex = y / tileSize;
-        if (matrixRowIndex < 0) matrixRowIndex = 0;
-        if (matrixRowIndex >= 8) matrixRowIndex = 7;
+        if (matrixRowIndex < 0)
+            matrixRowIndex = 0;
+        if (matrixRowIndex >= 8)
+            matrixRowIndex = 7;
         return matrixRowIndex;
     }
 
-    public int getMatrixColIndex(int x){
+    public int getMatrixColIndex(int x) {
         matrixColIndex = x / tileSize;
-        if (matrixColIndex < 0) matrixColIndex = 0;
-        if (matrixColIndex >= 8) matrixColIndex = 7;
+        if (matrixColIndex < 0)
+            matrixColIndex = 0;
+        if (matrixColIndex >= 8)
+            matrixColIndex = 7;
         return matrixColIndex;
     }
 
@@ -113,8 +119,7 @@ public class GamePanel extends JPanel implements Runnable, MouseListener, MouseM
         if (clickedPiece == null) {
             clickedPiece = pieceUpdate.getPieceAt(matrixColIndex, matrixRowIndex);
             boolean colour = clickedPiece.getColour();
-            if (colour != turn){
-                System.out.println("Wrong turn");
+            if (colour != turn) {
                 clickedPiece = null;
             } else {
                 if (clickedPiece != null) {
@@ -138,29 +143,32 @@ public class GamePanel extends JPanel implements Runnable, MouseListener, MouseM
         }
     }
 
-
     @Override
     public void mouseMoved(MouseEvent e) {
-        if (mouseFollow){
+        if (mouseFollow) {
             mouseX = e.getX();
             mouseY = e.getY();
         }
     }
 
     @Override
-    public void mouseEntered(MouseEvent e) {}
+    public void mouseEntered(MouseEvent e) {
+    }
 
     @Override
-    public void mouseExited(MouseEvent e) {}
+    public void mouseExited(MouseEvent e) {
+    }
 
     @Override
-    public void mouseDragged(MouseEvent e) {}
+    public void mouseDragged(MouseEvent e) {
+    }
 
     @Override
-    public void mouseClicked(MouseEvent e) {}
+    public void mouseClicked(MouseEvent e) {
+    }
 
     @Override
-    public void mousePressed(MouseEvent e) {}
-
+    public void mousePressed(MouseEvent e) {
+    }
 
 }

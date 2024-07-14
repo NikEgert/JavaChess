@@ -1,4 +1,5 @@
 package main;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
@@ -13,7 +14,7 @@ public abstract class Piece {
     protected int moveCount;
     protected PieceUpdate pieceUpdate;
 
-    public Piece(int x, int y, boolean colour, PieceUpdate pieceUpdate){
+    public Piece(int x, int y, boolean colour, PieceUpdate pieceUpdate) {
         this.x = x;
         this.y = y;
         this.colour = colour;
@@ -21,18 +22,18 @@ public abstract class Piece {
         this.pieceUpdate = pieceUpdate;
         loadImage();
     }
-    
+
     public abstract boolean canMove(int endX, int endY);
 
-    public boolean getColour(){
+    public boolean getColour() {
         return colour;
     }
 
-    public int getX(){
+    public int getX() {
         return x;
     }
 
-    public int getY(){
+    public int getY() {
         return y;
     }
 
@@ -55,7 +56,7 @@ public abstract class Piece {
         g2.drawImage(image, x * tileSize, y * tileSize, tileSize - 5, tileSize - 5, null);
     }
 
-    public BufferedImage getImage(){
+    public BufferedImage getImage() {
         return image;
     }
 }
