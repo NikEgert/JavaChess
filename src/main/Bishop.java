@@ -1,11 +1,12 @@
 package main;
 public class Bishop extends Piece {
 
-    public Bishop(int x, int y, Boolean colour){
-        super(x, y, colour);
+    public Bishop(int x, int y, Boolean colour, PieceUpdate pieceUpdate){
+        super(x, y, colour, pieceUpdate);
     }
 
-    public boolean canMove(int newX, int newY){
+    @Override
+    public boolean canMove(int endX, int endY){
         return true;
     }
 

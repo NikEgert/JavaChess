@@ -1,11 +1,12 @@
 package main;
 public class Queen extends Piece {
 
-    public Queen(int x, int y, boolean colour){
-        super(x, y, colour);
+    public Queen(int x, int y, boolean colour, PieceUpdate pieceUpdate){
+        super(x, y, colour, pieceUpdate);
     }
 
-    public boolean canMove(int newX, int newY){
+    @Override
+    public boolean canMove(int endX, int endY){
         return true;
     }
     

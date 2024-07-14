@@ -23,6 +23,9 @@ public class GamePanel extends JPanel implements Runnable, MouseListener, MouseM
 
     public boolean turn;
 
+    private int originalX = -1;
+    private int originalY = -1;
+
     public GamePanel(LayoutManager layout){
         super(layout);
         this.addMouseListener(this);
@@ -85,55 +88,62 @@ public class GamePanel extends JPanel implements Runnable, MouseListener, MouseM
         }
     }
 
+    public int getMatrixRowIndex(int y){
+        matrixRowIndex = y / tileSize;
+        if (matrixRowIndex < 0) matrixRowIndex = 0;
+        if (matrixRowIndex >= 8) matrixRowIndex = 7;
+        return matrixRowIndex;
+    }
+
+    public int getMatrixColIndex(int x){
+        matrixColIndex = x / tileSize;
+        if (matrixColIndex < 0) matrixColIndex = 0;
+        if (matrixColIndex >= 8) matrixColIndex = 7;
+        return matrixColIndex;
+    }
+
     @Override
-    public void mouseClicked(MouseEvent e) {}
+    public void mouseReleased(MouseEvent e) {
+        int x = e.getX();
+        int y = e.getY();
+
+        matrixColIndex = getMatrixColIndex(x);
+        matrixRowIndex = getMatrixRowIndex(y);
+
+        if (clickedPiece == null) {
+            clickedPiece = pieceUpdate.getPieceAt(matrixColIndex, matrixRowIndex);
+            boolean colour = clickedPiece.getColour();
+            if (colour != turn){
+                System.out.println("Wrong turn");
+                clickedPiece = null;
+            } else {
+                if (clickedPiece != null) {
+                    originalX = matrixColIndex;
+                    originalY = matrixRowIndex;
+                    pieceUpdate.erasePiece(matrixColIndex, matrixRowIndex);
+                    mouseFollow = true;
+                }
+            }
+        } else {
+            boolean canMove = pieceUpdate.setPiece(matrixColIndex, matrixRowIndex, clickedPiece);
+            mouseFollow = false;
+            if (canMove) {
+                pieceUpdate.printBoard();
+                turn = !turn;
+            } else {
+                pieceUpdate.setOriginal(originalX, originalY, clickedPiece);
+                pieceUpdate.printBoard();
+            }
+            clickedPiece = null;
+        }
+    }
+
 
     @Override
     public void mouseMoved(MouseEvent e) {
         if (mouseFollow){
             mouseX = e.getX();
             mouseY = e.getY();
-        }
-    }
-
-    @Override
-    public void mousePressed(MouseEvent e) {}
-
-    @Override
-    public void mouseReleased(MouseEvent e) {
-        int x = e.getX();
-        int y = e.getY();
-        matrixColIndex = x / tileSize;
-        matrixRowIndex = y / tileSize;
-
-        if (matrixRowIndex < 0) matrixRowIndex = 0;
-        if (matrixRowIndex >= 8) matrixRowIndex = 7;
-        if (matrixColIndex < 0) matrixColIndex = 0;
-        if (matrixColIndex >= 8) matrixColIndex = 7;
-
-        if (clickedPiece == null) {
-            clickedPiece = pieceUpdate.getPieceAt(matrixColIndex, matrixRowIndex);
-            Boolean colour = clickedPiece.getColour();
-            if (colour != turn){
-                System.out.println("Wrong turn");
-                clickedPiece = null;
-            }else{
-                if (clickedPiece != null) {
-                    pieceUpdate.erasePiece(matrixColIndex, matrixRowIndex);
-                    mouseFollow = true;
-                    pieceUpdate.printBoard();
-                }
-            }
-        } else {
-            pieceUpdate.setPiece(matrixColIndex, matrixRowIndex, clickedPiece);
-            clickedPiece = null;
-            mouseFollow = false;
-            if (turn == false){
-                turn = true;
-            } else{
-                turn = false;
-            }
-            pieceUpdate.printBoard();
         }
     }
 
@@ -145,4 +155,12 @@ public class GamePanel extends JPanel implements Runnable, MouseListener, MouseM
 
     @Override
     public void mouseDragged(MouseEvent e) {}
+
+    @Override
+    public void mouseClicked(MouseEvent e) {}
+
+    @Override
+    public void mousePressed(MouseEvent e) {}
+
+
 }

@@ -1,11 +1,11 @@
 package main;
 public class Rook extends Piece {
 
-    public Rook(int x, int y, boolean colour){
-        super(x, y, colour);
+    public Rook(int x, int y, boolean colour, PieceUpdate pieceUpdate){
+        super(x, y, colour, pieceUpdate);
     }
 
-    public boolean canMove(int newX, int newY){
+    public boolean canMove(int endX, int endY){
         return true;
     }
     

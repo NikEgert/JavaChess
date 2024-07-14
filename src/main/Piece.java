@@ -11,14 +11,18 @@ public abstract class Piece {
     protected boolean colour;
     protected BufferedImage image;
     protected int moveCount;
+    protected PieceUpdate pieceUpdate;
 
-    public Piece(int x, int y, boolean colour){
+    public Piece(int x, int y, boolean colour, PieceUpdate pieceUpdate){
         this.x = x;
         this.y = y;
         this.colour = colour;
         this.moveCount = 0;
+        this.pieceUpdate = pieceUpdate;
         loadImage();
     }
+    
+    public abstract boolean canMove(int endX, int endY);
 
     public boolean getColour(){
         return colour;

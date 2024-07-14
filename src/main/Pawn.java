@@ -1,23 +1,24 @@
 package main;
 public class Pawn extends Piece {
 
-    public Pawn(int x, int y, boolean colour){
-        super(x, y, colour);
+    public Pawn(int x, int y, boolean colour, PieceUpdate pieceUpdate){
+        super(x, y, colour, pieceUpdate);
     }
-
-    public boolean canMove(int newX, int newY, boolean colour){
+    
+    @Override
+    public boolean canMove(int endX, int endY){
         if (colour == true){
-            if (moveCount == 0 && newY == y - 2 && newX == x){
+            if (moveCount == 0 && endY == y - 2 && endX == x){
                 return true;
                 }
-            if (newY == y - 1 && newX == x){
+            if (endY == y - 1 && endX == x){
                 return true;
             }
         } else{
-            if(moveCount == 0 && newY == y + 2 && newX == x){
+            if(moveCount == 0 && endY == y + 2 && endX == x){
                 return true;
             }
-            if (newY == y + 1 && newX == x){
+            if (endY == y + 1 && endX == x){
                 return true;
             }
         }
