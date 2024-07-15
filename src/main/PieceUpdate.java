@@ -7,11 +7,11 @@ public class PieceUpdate {
         grid = new Piece[8][8];
     }
 
-    public boolean setPiece(int toX, int toY, Piece piece){
+    public boolean setPiece(int toX, int toY, Piece piece) {
         if (piece != null) {
-            if (piece.canMove(toX, toY)){
+            if (piece.canMove(toX, toY)) {
                 grid[toX][toY] = piece;
-                piece.setPosition(toX , toY); 
+                piece.setPosition(toX, toY);
                 return true;
             } else {
                 System.out.println("Invalid move!");
@@ -20,12 +20,12 @@ public class PieceUpdate {
         return false;
     }
 
-    public void setOriginal(int originalX, int originalY, Piece piece){
+    public void setOriginal(int originalX, int originalY, Piece piece) {
         grid[originalX][originalY] = piece;
-        piece.setPosition(originalX , originalY); 
+        piece.setPosition(originalX, originalY);
     }
 
-    public Piece erasePiece(int fromX, int fromY){
+    public Piece erasePiece(int fromX, int fromY) {
         Piece removedPiece = grid[fromX][fromY];
         grid[fromX][fromY] = null;
         return removedPiece;
@@ -44,42 +44,42 @@ public class PieceUpdate {
                 }
 
                 // King
-                if (j == 0 && i == 4){
+                if (j == 0 && i == 4) {
                     grid[i][j] = new King(i, j, false, this);
 
-                } else if (j == 7 && i == 4){
+                } else if (j == 7 && i == 4) {
                     grid[i][j] = new King(i, j, true, this);
                 }
 
                 // Bishop
-                if (j == 0 && i == 2 || j == 0 && i == 5){
+                if (j == 0 && i == 2 || j == 0 && i == 5) {
                     grid[i][j] = new Bishop(i, j, false, this);
 
-                } else if (j == 7 && i == 2 || j == 7 && i == 5){
+                } else if (j == 7 && i == 2 || j == 7 && i == 5) {
                     grid[i][j] = new Bishop(i, j, true, this);
                 }
 
                 // Knight
-                if (j == 0 && i == 1 || j == 0 && i == 6){
+                if (j == 0 && i == 1 || j == 0 && i == 6) {
                     grid[i][j] = new Knight(i, j, false, this);
 
-                } else if (j == 7 && i == 1 || j == 7 && i == 6){
+                } else if (j == 7 && i == 1 || j == 7 && i == 6) {
                     grid[i][j] = new Knight(i, j, true, this);
                 }
 
                 // Rook
-                if (j == 0 && i == 0 || j == 0 && i == 7){
+                if (j == 0 && i == 0 || j == 0 && i == 7) {
                     grid[i][j] = new Rook(i, j, false, this);
 
-                } else if (j == 7 && i == 0 || j == 7 && i == 7){
+                } else if (j == 7 && i == 0 || j == 7 && i == 7) {
                     grid[i][j] = new Rook(i, j, true, this);
                 }
 
                 // Queen
-                if (j == 0 && i == 3){
+                if (j == 0 && i == 3) {
                     grid[i][j] = new Queen(i, j, false, this);
 
-                } else if (j == 7 && i == 3){
+                } else if (j == 7 && i == 3) {
                     grid[i][j] = new Queen(i, j, true, this);
                 }
             }
@@ -104,40 +104,44 @@ public class PieceUpdate {
         }
     }
 
-    public Piece[][] getGrid(){
+    public Piece[][] getGrid() {
         return grid;
     }
 
-    public boolean isVerticalPathClear(int startX, int startY, int endY){
+    public boolean isVerticalPathClear(int startX, int startY, int endY) {
         int step = (startY < endY) ? 1 : -1;
-        for (int y = startY; y <= endY; y += step){
-            if (getPieceAt(startX, y) != null){
-                return true;
+        for (int y = startY + step; y != endY; y += step) {
+            if (getPieceAt(startX, y) != null) {
+                return false;
             }
         }
-        return false;
+        return true;
     }
 
-    public boolean isHorizontalPathClear(int startX, int startY, int endX){
+    public boolean isHorizontalPathClear(int startX, int startY, int endX) {
         int step = (startX < endX) ? 1 : -1;
-        for (int x = startX; x <= endX; x += step){
-            if (getPieceAt(x, startY) != null){
-                return true;
+        for (int x = startX + step; x != endX; x += step) {
+            if (getPieceAt(x, startY) != null) {
+                return false;
             }
         }
-        return false;
+        return true;
     }
 
-    public boolean isDiagonalPathClear(int startX, int startY, int endY, int endX){
-        int x = startX;
-        int y = startY;
-        while (x <= endX && y <= endY){
-                if (getPieceAt(x, y) != null){
-                    return true;
-                }
-            x++;
-            y++;
+    public boolean isDiagonalPathClear(int startX, int startY, int endX, int endY) {
+        int xDirection = (endX > startX) ? 1 : -1;
+        int yDirection = (endY > startY) ? 1 : -1;
+        int x = startX + xDirection;
+        int y = startY + yDirection;
+
+        while (x != endX && y != endY) {
+            if (getPieceAt(x, y) != null) {
+                return false;
+            }
+            x += xDirection;
+            y += yDirection;
         }
-        return false;
+        return true;
     }
+
 }

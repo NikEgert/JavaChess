@@ -133,11 +133,9 @@ public class GamePanel extends JPanel implements Runnable, MouseListener, MouseM
             boolean canMove = pieceUpdate.setPiece(matrixColIndex, matrixRowIndex, clickedPiece);
             mouseFollow = false;
             if (canMove) {
-                pieceUpdate.printBoard();
                 turn = !turn;
             } else {
                 pieceUpdate.setOriginal(originalX, originalY, clickedPiece);
-                pieceUpdate.printBoard();
             }
             clickedPiece = null;
         }

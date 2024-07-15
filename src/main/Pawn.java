@@ -21,7 +21,7 @@ public class Pawn extends Piece {
             if (endY == y - 1 && endX == x - 1 || endY == y - 1 && endX == x + 1) {
                 Piece targetPiece = pieceUpdate.getPieceAt(endX, endY);
                 if (targetPiece != null && targetPiece.getColour() != colour) {
-                    return true; // takes piece
+                    return true;
                 }
             }
 
@@ -37,7 +37,7 @@ public class Pawn extends Piece {
             if (endY == y + 1 && endX == x + 1 || endY == y + 1 && endX == x - 1) {
                 Piece targetPiece = pieceUpdate.getPieceAt(endX, endY);
                 if (targetPiece != null && targetPiece.getColour() != colour) {
-                    return true; // takes piece
+                    return true;
                 }
             }
         }
