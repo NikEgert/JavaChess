@@ -131,9 +131,6 @@ public class GamePanel extends JPanel implements Runnable, MouseListener, MouseM
             boolean colour = clickedPiece.getColour();
             if (colour != turn) {
                 clickedPiece = null;
-            } else if (check) {
-                clickedPiece = pieceUpdate.getKing(turn);
-                // hightlight tile
             } else {
                 if (clickedPiece != null) {
                     originalX = matrixColIndex;

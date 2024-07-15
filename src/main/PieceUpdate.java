@@ -2,16 +2,22 @@ package main;
 
 public class PieceUpdate {
     Piece[][] grid;
+    SoundPlayer sound;
 
     public PieceUpdate() {
         grid = new Piece[8][8];
+        sound = new SoundPlayer();
     }
 
     public boolean setPiece(int toX, int toY, Piece piece) {
         if (piece != null) {
             if (piece.canMove(toX, toY)) {
+                if (getPieceAt(toX, toY) != null) {
+                    sound.takeSound();
+                }
                 grid[toX][toY] = piece;
                 piece.setPosition(toX, toY);
+                sound.moveSound();
                 return true;
             } else {
                 System.out.println("Invalid move!");
