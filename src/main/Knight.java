@@ -67,6 +67,91 @@ public class Knight extends Piece {
     }
 
     @Override
+    public boolean check() {
+        if (pieceUpdate.getPieceAt(x + 1, y - 2) != null) {
+            Piece piece1 = pieceUpdate.getPieceAt(x + 1, y - 2);
+            if (piece1 instanceof King) {
+                King foundKing1 = (King) piece1;
+                if (foundKing1.getColour() != colour) {
+                    return true;
+                }
+            }
+        }
+
+        if (pieceUpdate.getPieceAt(x - 1, y - 2) != null) {
+            Piece piece1 = pieceUpdate.getPieceAt(x - 1, y - 2);
+            if (piece1 instanceof King) {
+                King foundKing1 = (King) piece1;
+                if (foundKing1.getColour() != colour) {
+                    return true;
+                }
+            }
+        }
+
+        if (pieceUpdate.getPieceAt(x + 1, y + 2) != null) {
+            Piece piece1 = pieceUpdate.getPieceAt(x + 1, y + 2);
+            if (piece1 instanceof King) {
+                King foundKing1 = (King) piece1;
+                if (foundKing1.getColour() != colour) {
+                    return true;
+                }
+            }
+        }
+
+        if (pieceUpdate.getPieceAt(x - 1, y + 2) != null) {
+            Piece piece1 = pieceUpdate.getPieceAt(x - 1, x + 2);
+            if (piece1 instanceof King) {
+                King foundKing1 = (King) piece1;
+                if (foundKing1.getColour() != colour) {
+                    return true;
+                }
+            }
+        }
+
+        if (pieceUpdate.getPieceAt(x + 2, y + 1) != null) {
+            Piece piece1 = pieceUpdate.getPieceAt(x + 2, y + 1);
+            if (piece1 instanceof King) {
+                King foundKing1 = (King) piece1;
+                if (foundKing1.getColour() != colour) {
+                    return true;
+                }
+            }
+        }
+
+        if (pieceUpdate.getPieceAt(x + 2, y - 1) != null) {
+            Piece piece1 = pieceUpdate.getPieceAt(x + 2, y - 1);
+            if (piece1 instanceof King) {
+                King foundKing1 = (King) piece1;
+                if (foundKing1.getColour() != colour) {
+                    return true;
+                }
+            }
+        }
+
+        if (pieceUpdate.getPieceAt(x - 2, y + 1) != null) {
+            Piece piece1 = pieceUpdate.getPieceAt(x - 2, y + 1);
+            if (piece1 instanceof King) {
+                King foundKing1 = (King) piece1;
+                if (foundKing1.getColour() != colour) {
+                    return true;
+                }
+            }
+        }
+
+        if (pieceUpdate.getPieceAt(x - 2, y - 1) != null) {
+            Piece piece1 = pieceUpdate.getPieceAt(x - 2, y - 1);
+            if (piece1 instanceof King) {
+                King foundKing1 = (King) piece1;
+                if (foundKing1.getColour() != colour) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    @Override
     public String getImageFileName() {
         return colour ? "src/assets/white/Knight.png" : "src/assets/black/Knight.png";
     }

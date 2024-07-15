@@ -31,6 +31,20 @@ public class PieceUpdate {
         return removedPiece;
     }
 
+    public Piece getKing(boolean colour) {
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid[i].length; j++) {
+                if (grid[i][j] instanceof King) {
+                    King king = (King) grid[i][j];
+                    if (king.getColour() == colour) {
+                        return king;
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
     public void initialPositions() {
         for (int i = 0; i < grid.length; i++) {
             for (int j = 0; j < grid[i].length; j++) {

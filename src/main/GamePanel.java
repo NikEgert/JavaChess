@@ -23,6 +23,7 @@ public class GamePanel extends JPanel implements Runnable, MouseListener, MouseM
     public Piece clickedPiece;
 
     public boolean turn;
+    public boolean check;
 
     private int originalX = -1;
     private int originalY = -1;
@@ -37,6 +38,7 @@ public class GamePanel extends JPanel implements Runnable, MouseListener, MouseM
         pieceUpdate = new PieceUpdate();
         pieceUpdate.initialPositions();
         this.turn = true;
+        this.check = false;
     }
 
     public void startGameThread() {
@@ -88,6 +90,14 @@ public class GamePanel extends JPanel implements Runnable, MouseListener, MouseM
             g2.drawImage(clickedPiece.getImage(), mouseX - tileSize / 2, mouseY - tileSize / 2, tileSize, tileSize,
                     null);
         }
+
+        if (check) {
+            int i = clickedPiece.getX();
+            int j = clickedPiece.getY();
+            g2.setColor(new Color(230, 0, 0));
+            g2.fillRect(i * tileSize, j * tileSize, tileSize, tileSize);
+
+        }
     }
 
     public int getMatrixRowIndex(int y) {
@@ -121,6 +131,9 @@ public class GamePanel extends JPanel implements Runnable, MouseListener, MouseM
             boolean colour = clickedPiece.getColour();
             if (colour != turn) {
                 clickedPiece = null;
+            } else if (check) {
+                clickedPiece = pieceUpdate.getKing(turn);
+                // hightlight tile
             } else {
                 if (clickedPiece != null) {
                     originalX = matrixColIndex;
