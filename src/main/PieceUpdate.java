@@ -9,18 +9,67 @@ public class PieceUpdate {
         sound = new SoundPlayer();
     }
 
+    public Piece checkCheck(Piece piece) {
+        if (piece.check()) {
+            sound.checkSound();
+            for (int i = 0; i < grid.length; i++) {
+                for (int j = 0; j < grid[i].length; j++) {
+                    if (grid[i][j] instanceof King) {
+                        King king = (King) grid[i][j];
+                        if (king.getColour() != piece.getColour()) {
+                            return king;
+                        }
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
     public boolean setPiece(int toX, int toY, Piece piece) {
-        if (piece != null) {
-            if (piece.canMove(toX, toY)) {
-                if (getPieceAt(toX, toY) != null) {
+        if (piece == null) {
+            return false;
+        }
+
+        if (piece instanceof King) {
+            if (isSquareThreatened(toX, toY, piece.getColour())) {
+                return false;
+            }
+        }
+
+        if (piece.canMove(toX, toY)) {
+            if (getPieceAt(toX, toY) != null) {
+                if (getPieceAt(toX, toY) instanceof King) {
+                    return false;
+                } else {
                     sound.takeSound();
                 }
-                grid[toX][toY] = piece;
-                piece.setPosition(toX, toY);
-                sound.moveSound();
-                return true;
-            } else {
-                System.out.println("Invalid move!");
+            }
+            grid[toX][toY] = piece;
+            piece.setPosition(toX, toY);
+            sound.moveSound();
+            return true;
+        } else {
+            System.out.println("Invalid move!");
+        }
+
+        return false;
+    }
+
+    public boolean isSquareThreatened(int x, int y, boolean kingColour) {
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                Piece piece = grid[i][j];
+                if (piece != null && piece.getColour() != kingColour) {
+                    if (piece instanceof Pawn) {
+                        int direction = kingColour ? -1 : 1;
+                        if ((i + direction == x && j + 1 == y) || (i + direction == x && j - 1 == y)) {
+                            return true;
+                        }
+                    } else if (piece.canMove(x, y)) {
+                        return true;
+                    }
+                }
             }
         }
         return false;
@@ -35,20 +84,6 @@ public class PieceUpdate {
         Piece removedPiece = grid[fromX][fromY];
         grid[fromX][fromY] = null;
         return removedPiece;
-    }
-
-    public Piece getKing(boolean colour) {
-        for (int i = 0; i < grid.length; i++) {
-            for (int j = 0; j < grid[i].length; j++) {
-                if (grid[i][j] instanceof King) {
-                    King king = (King) grid[i][j];
-                    if (king.getColour() == colour) {
-                        return king;
-                    }
-                }
-            }
-        }
-        return null;
     }
 
     public void initialPositions() {

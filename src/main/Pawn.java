@@ -11,10 +11,16 @@ public class Pawn extends Piece {
 
         if (colour == true) {
             if (moveCount == 0 && endY == y - 2 && endX == x) {
+                if (pieceUpdate.getPieceAt(endX, endY) != null) {
+                    return false;
+                }
                 moveCount++;
                 return true;
             }
             if (endY == y - 1 && endX == x) {
+                if (pieceUpdate.getPieceAt(endX, endY) != null) {
+                    return false;
+                }
                 moveCount++;
                 return true;
             }
@@ -27,10 +33,16 @@ public class Pawn extends Piece {
 
         } else {
             if (moveCount == 0 && endY == y + 2 && endX == x) {
+                if (pieceUpdate.getPieceAt(endX, endY) != null) {
+                    return false;
+                }
                 moveCount++;
                 return true;
             }
             if (endY == y + 1 && endX == x) {
+                if (pieceUpdate.getPieceAt(endX, endY) != null) {
+                    return false;
+                }
                 moveCount++;
                 return true;
             }
@@ -46,22 +58,25 @@ public class Pawn extends Piece {
 
     @Override
     public boolean check() {
-        if (pieceUpdate.getPieceAt(x - 1, y - 1) != null) {
+        if (colour) {
             Piece piece1 = pieceUpdate.getPieceAt(x - 1, y - 1);
-            if (piece1 instanceof King) {
-                King foundKing1 = (King) piece1;
-                if (foundKing1.getColour() != colour) {
-                    return true;
-                }
+            if (piece1 instanceof King && piece1.getColour() != colour) {
+                return true;
             }
-        }
-        if (pieceUpdate.getPieceAt(x + 1, y - 1) != null) {
-            Piece piece2 = pieceUpdate.getPieceAt(x - 1, y - 1);
-            if (piece2 instanceof King) {
-                King foundKing2 = (King) piece2;
-                if (foundKing2.getColour() != colour) {
-                    return true;
-                }
+
+            Piece piece2 = pieceUpdate.getPieceAt(x + 1, y - 1);
+            if (piece2 instanceof King && piece2.getColour() != colour) {
+                return true;
+            }
+        } else {
+            Piece piece3 = pieceUpdate.getPieceAt(x - 1, y + 1);
+            if (piece3 instanceof King && piece3.getColour() != colour) {
+                return true;
+            }
+
+            Piece piece4 = pieceUpdate.getPieceAt(x + 1, y + 1);
+            if (piece4 instanceof King && piece4.getColour() != colour) {
+                return true;
             }
         }
         return false;

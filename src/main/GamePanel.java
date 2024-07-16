@@ -21,9 +21,13 @@ public class GamePanel extends JPanel implements Runnable, MouseListener, MouseM
     public boolean mouseFollow;
 
     public Piece clickedPiece;
+    public Piece king;
+    public int kingX = -1;
+    public int kingY = -1;
 
     public boolean turn;
     public boolean check;
+    public boolean checkMate;
 
     private int originalX = -1;
     private int originalY = -1;
@@ -39,6 +43,7 @@ public class GamePanel extends JPanel implements Runnable, MouseListener, MouseM
         pieceUpdate.initialPositions();
         this.turn = true;
         this.check = false;
+        this.checkMate = false;
     }
 
     public void startGameThread() {
@@ -74,6 +79,16 @@ public class GamePanel extends JPanel implements Runnable, MouseListener, MouseM
             }
         }
 
+        if (check && king != null) {
+            g2.setColor(new Color(255, 165, 0));
+            g2.fillRect(kingX * tileSize, kingY * tileSize, tileSize, tileSize);
+        }
+
+        if (checkMate) {
+            g2.setColor(new Color(255, 0, 0));
+            g2.fillRect(kingX * tileSize, kingY * tileSize, tileSize, tileSize);
+        }
+
         Piece[][] grid = pieceUpdate.getGrid();
 
         // Draw pieces
@@ -89,14 +104,6 @@ public class GamePanel extends JPanel implements Runnable, MouseListener, MouseM
         if (mouseFollow && clickedPiece != null) {
             g2.drawImage(clickedPiece.getImage(), mouseX - tileSize / 2, mouseY - tileSize / 2, tileSize, tileSize,
                     null);
-        }
-
-        if (check) {
-            int i = clickedPiece.getX();
-            int j = clickedPiece.getY();
-            g2.setColor(new Color(230, 0, 0));
-            g2.fillRect(i * tileSize, j * tileSize, tileSize, tileSize);
-
         }
     }
 
@@ -131,6 +138,8 @@ public class GamePanel extends JPanel implements Runnable, MouseListener, MouseM
             boolean colour = clickedPiece.getColour();
             if (colour != turn) {
                 clickedPiece = null;
+            } else if (check && clickedPiece != king) {
+                clickedPiece = null;
             } else {
                 if (clickedPiece != null) {
                     originalX = matrixColIndex;
@@ -143,6 +152,15 @@ public class GamePanel extends JPanel implements Runnable, MouseListener, MouseM
             boolean canMove = pieceUpdate.setPiece(matrixColIndex, matrixRowIndex, clickedPiece);
             mouseFollow = false;
             if (canMove) {
+                if (pieceUpdate.checkCheck(clickedPiece) != null) {
+                    king = pieceUpdate.checkCheck(clickedPiece);
+                    check = true;
+                    kingX = king.getX();
+                    kingY = king.getY();
+                } else {
+                    check = false;
+                    king = null;
+                }
                 turn = !turn;
             } else {
                 pieceUpdate.setOriginal(originalX, originalY, clickedPiece);

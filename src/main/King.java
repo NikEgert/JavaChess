@@ -8,7 +8,7 @@ public class King extends Piece {
 
     @Override
     public boolean canMove(int endX, int endY) {
-        if (Math.abs(endX - x) <= 1 && Math.abs(endY - y) <= 1) {
+        if ((endX != x || endY != y) && Math.abs(endX - x) <= 1 && Math.abs(endY - y) <= 1) {
             Piece targetPiece = pieceUpdate.getPieceAt(endX, endY);
             if (targetPiece == null || targetPiece.getColour() != colour) {
                 return true;
