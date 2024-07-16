@@ -26,4 +26,5 @@ public class King extends Piece {
     public String getImageFileName() {
         return colour ? "src/assets/white/King.png" : "src/assets/black/King.png";
     }
+
 }

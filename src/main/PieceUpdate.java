@@ -56,18 +56,54 @@ public class PieceUpdate {
         return false;
     }
 
+    public boolean checkMate() {
+        sound.mateSound();
+        return true;
+    }
+
     public boolean isSquareThreatened(int x, int y, boolean kingColour) {
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 Piece piece = grid[i][j];
                 if (piece != null && piece.getColour() != kingColour) {
                     if (piece instanceof Pawn) {
-                        int direction = kingColour ? -1 : 1;
+                        int direction = kingColour ? 1 : -1;
                         if ((i + direction == x && j + 1 == y) || (i + direction == x && j - 1 == y)) {
                             return true;
                         }
                     } else if (piece.canMove(x, y)) {
                         return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    public boolean canMoveAroundPiece(Piece piece) {
+        if (!(piece instanceof King)) {
+            return false;
+        }
+
+        int x = piece.getX();
+        int y = piece.getY();
+        boolean pieceColour = piece.getColour();
+
+        for (int offsetX = -1; offsetX <= 1; offsetX++) {
+            for (int offsetY = -1; offsetY <= 1; offsetY++) {
+                if (offsetX == 0 && offsetY == 0) {
+                    continue;
+                }
+
+                int endX = x + offsetX;
+                int endY = y + offsetY;
+
+                if (endX >= 0 && endX < 8 && endY >= 0 && endY < 8) {
+                    if (!isSquareThreatened(endX, endY, pieceColour)) {
+                        Piece blockingPiece = getPieceAt(endX, endY);
+                        if (blockingPiece == null || blockingPiece.getColour() != pieceColour) {
+                            return true;
+                        }
                     }
                 }
             }
