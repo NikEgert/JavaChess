@@ -1,4 +1,5 @@
 package main;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -6,7 +7,7 @@ public class App {
     public static void main(String[] args) throws Exception {
         int boardWidth = 800;
         int boardHeight = 800;
-        
+
         JFrame frame = new JFrame("Chess");
         frame.setSize(boardWidth, boardHeight);
         frame.setLocationRelativeTo(null);

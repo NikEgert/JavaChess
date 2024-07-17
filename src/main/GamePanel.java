@@ -4,6 +4,9 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
+import java.util.Collections;
+import java.util.List;
+
 public class GamePanel extends JPanel implements Runnable, MouseListener, MouseMotionListener {
     int tileSize = 100;
     int boardWidth = 8 * tileSize;
@@ -28,6 +31,8 @@ public class GamePanel extends JPanel implements Runnable, MouseListener, MouseM
     public boolean turn;
     public boolean check;
     public boolean checkMate;
+
+    public List<Piece> moveablePieces;
 
     private int originalX = -1;
     private int originalY = -1;
@@ -112,7 +117,7 @@ public class GamePanel extends JPanel implements Runnable, MouseListener, MouseM
         if (matrixRowIndex < 0)
             matrixRowIndex = 0;
         if (matrixRowIndex >= 8)
-            matrixRowIndex = 7;
+            matrixRowIndex = 8;
         return matrixRowIndex;
     }
 
@@ -121,7 +126,7 @@ public class GamePanel extends JPanel implements Runnable, MouseListener, MouseM
         if (matrixColIndex < 0)
             matrixColIndex = 0;
         if (matrixColIndex >= 8)
-            matrixColIndex = 7;
+            matrixColIndex = 8;
         return matrixColIndex;
     }
 
@@ -138,7 +143,7 @@ public class GamePanel extends JPanel implements Runnable, MouseListener, MouseM
             boolean colour = clickedPiece.getColour();
             if (colour != turn) {
                 clickedPiece = null;
-            } else if (check && clickedPiece != king) {
+            } else if (check && !checkMoveable(clickedPiece)) {
                 clickedPiece = null;
             } else {
                 if (clickedPiece != null) {
@@ -154,17 +159,27 @@ public class GamePanel extends JPanel implements Runnable, MouseListener, MouseM
             if (canMove) {
                 if (pieceUpdate.checkCheck(clickedPiece) != null) {
                     king = pieceUpdate.checkCheck(clickedPiece);
+                    Boolean kingColour = king.getColour();
+                    List<Piece> blockingPieces = pieceUpdate.getBlockingPieces(kingColour);
                     check = true;
-                    // need to add if can block condition
-                    if (!pieceUpdate.canMoveAroundPiece(king)) {
+
+                    System.out.println("Can king move around piece? " + pieceUpdate.canMoveAroundPiece(king));
+                    System.out.println("Blocking pieces: " + blockingPieces);
+                    System.out.println("Is blockingPieces empty? " + blockingPieces.isEmpty());
+
+                    if (!pieceUpdate.canMoveAroundPiece(king) && blockingPieces.isEmpty()) {
                         System.out.println("checkmate");
                         checkMate = true;
                         pieceUpdate.checkMate();
+                    } else {
+                        blockingPieces.add(king);
+                        moveablePieces = blockingPieces;
                     }
                     kingX = king.getX();
                     kingY = king.getY();
                 } else {
                     check = false;
+                    moveablePieces = Collections.<Piece>emptyList();
                     king = null;
                 }
                 turn = !turn;
@@ -173,6 +188,15 @@ public class GamePanel extends JPanel implements Runnable, MouseListener, MouseM
             }
             clickedPiece = null;
         }
+    }
+
+    public boolean checkMoveable(Piece p) {
+        for (Piece piece : moveablePieces) {
+            if (piece.equals(p)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override

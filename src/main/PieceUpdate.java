@@ -1,5 +1,8 @@
 package main;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class PieceUpdate {
     Piece[][] grid;
     SoundPlayer sound;
@@ -21,6 +24,16 @@ public class PieceUpdate {
                         }
                     }
                 }
+            }
+        }
+        return null;
+    }
+
+    public Piece checkBlock(Piece movedPiece) {
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; i < grid[i].length; j++) {
+                Piece piece = grid[i][j];
+
             }
         }
         return null;
@@ -80,6 +93,60 @@ public class PieceUpdate {
         return false;
     }
 
+    public List<int[]> getThreatenedSquares(boolean kingColour) {
+        List<int[]> threatenedSquares = new ArrayList<>();
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                Piece piece = grid[i][j];
+                if (piece != null && piece.getColour() != kingColour) {
+                    if (piece instanceof Pawn) {
+                        int direction = kingColour ? 1 : -1;
+                        if (i + direction >= 0 && i + direction < 8) {
+                            if (j + 1 < 8) {
+                                threatenedSquares.add(new int[] { i + direction, j + 1 });
+                            }
+                            if (j - 1 >= 0) {
+                                threatenedSquares.add(new int[] { i + direction, j - 1 });
+                            }
+                        }
+                    } else {
+                        for (int x = 0; x < 8; x++) {
+                            for (int y = 0; y < 8; y++) {
+                                if (piece.canMove(x, y)) {
+                                    threatenedSquares.add(new int[] { x, y });
+                                }
+                            }
+                        }
+
+                        threatenedSquares.add(new int[] { i, j });
+                    }
+                }
+            }
+        }
+        return threatenedSquares;
+    }
+
+    public List<Piece> getBlockingPieces(boolean kingColour) {
+        List<int[]> threatenedSquares = getThreatenedSquares(kingColour);
+        List<Piece> blockingPieces = new ArrayList<>();
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                Piece piece = grid[i][j];
+                if (piece != null && piece.getColour() == kingColour) {
+                    for (int[] square : threatenedSquares) {
+                        int x = square[0];
+                        int y = square[1];
+                        if (piece.canMove(x, y)) {
+                            blockingPieces.add(piece);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        return blockingPieces;
+    }
+
     public boolean canMoveAroundPiece(Piece piece) {
         if (!(piece instanceof King)) {
             return false;
@@ -98,12 +165,9 @@ public class PieceUpdate {
                 int endX = x + offsetX;
                 int endY = y + offsetY;
 
-                if (endX >= 0 && endX < 8 && endY >= 0 && endY < 8) {
-                    if (!isSquareThreatened(endX, endY, pieceColour)) {
-                        Piece blockingPiece = getPieceAt(endX, endY);
-                        if (blockingPiece == null || blockingPiece.getColour() != pieceColour) {
-                            return true;
-                        }
+                if (endX >= 0 && endX <= 8 && endY >= 0 && endY <= 8) {
+                    if (!isSquareThreatened(endX, endY, pieceColour) && !piece.canMove(endX, endY)) {
+                        return true;
                     }
                 }
             }
@@ -142,29 +206,29 @@ public class PieceUpdate {
                     grid[i][j] = new King(i, j, true, this);
                 }
 
-                // Bishop
-                if (j == 0 && i == 2 || j == 0 && i == 5) {
-                    grid[i][j] = new Bishop(i, j, false, this);
+                // // Bishop
+                // if (j == 0 && i == 2 || j == 0 && i == 5) {
+                // grid[i][j] = new Bishop(i, j, false, this);
 
-                } else if (j == 7 && i == 2 || j == 7 && i == 5) {
-                    grid[i][j] = new Bishop(i, j, true, this);
-                }
+                // } else if (j == 7 && i == 2 || j == 7 && i == 5) {
+                // grid[i][j] = new Bishop(i, j, true, this);
+                // }
 
-                // Knight
-                if (j == 0 && i == 1 || j == 0 && i == 6) {
-                    grid[i][j] = new Knight(i, j, false, this);
+                // // Knight
+                // if (j == 0 && i == 1 || j == 0 && i == 6) {
+                // grid[i][j] = new Knight(i, j, false, this);
 
-                } else if (j == 7 && i == 1 || j == 7 && i == 6) {
-                    grid[i][j] = new Knight(i, j, true, this);
-                }
+                // } else if (j == 7 && i == 1 || j == 7 && i == 6) {
+                // grid[i][j] = new Knight(i, j, true, this);
+                // }
 
-                // Rook
-                if (j == 0 && i == 0 || j == 0 && i == 7) {
-                    grid[i][j] = new Rook(i, j, false, this);
+                // // Rook
+                // if (j == 0 && i == 0 || j == 0 && i == 7) {
+                // grid[i][j] = new Rook(i, j, false, this);
 
-                } else if (j == 7 && i == 0 || j == 7 && i == 7) {
-                    grid[i][j] = new Rook(i, j, true, this);
-                }
+                // } else if (j == 7 && i == 0 || j == 7 && i == 7) {
+                // grid[i][j] = new Rook(i, j, true, this);
+                // }
 
                 // Queen
                 if (j == 0 && i == 3) {
