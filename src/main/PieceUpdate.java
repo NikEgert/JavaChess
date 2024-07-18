@@ -29,16 +29,6 @@ public class PieceUpdate {
         return null;
     }
 
-    public Piece checkBlock(Piece movedPiece) {
-        for (int i = 0; i < grid.length; i++) {
-            for (int j = 0; i < grid[i].length; j++) {
-                Piece piece = grid[i][j];
-
-            }
-        }
-        return null;
-    }
-
     public boolean setPiece(int toX, int toY, Piece piece) {
         if (piece == null) {
             return false;
@@ -93,8 +83,9 @@ public class PieceUpdate {
         return false;
     }
 
-    public List<int[]> getThreatenedSquares(boolean kingColour) {
+    public List<int[]> getThreatenedSquares(int kingX, int kingY, boolean kingColour) {
         List<int[]> threatenedSquares = new ArrayList<>();
+
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 Piece piece = grid[i][j];
@@ -102,37 +93,40 @@ public class PieceUpdate {
                     if (piece instanceof Pawn) {
                         int direction = kingColour ? 1 : -1;
                         if (i + direction >= 0 && i + direction < 8) {
-                            if (j + 1 < 8) {
-                                threatenedSquares.add(new int[] { i + direction, j + 1 });
-                            }
-                            if (j - 1 >= 0) {
-                                threatenedSquares.add(new int[] { i + direction, j - 1 });
+                            if ((j + 1 < 8 && i + direction == kingX && j + 1 == kingY) ||
+                                    (j - 1 >= 0 && i + direction == kingX && j - 1 == kingY)) {
+                                threatenedSquares.add(new int[] { kingX, kingY });
                             }
                         }
-                    } else {
-                        for (int x = 0; x < 8; x++) {
-                            for (int y = 0; y < 8; y++) {
-                                if (piece.canMove(x, y)) {
-                                    threatenedSquares.add(new int[] { x, y });
-                                }
-                            }
-                        }
+                    } else if (piece.canMove(kingX, kingY)) {
+                        // Handle other piece threats (queen, bishop, rook)
+                        // THIS ISNT WORKING PROPERLY YET
+                        int deltaX = Integer.signum(kingX - i);
+                        int deltaY = Integer.signum(kingY - j);
+                        int x = i + deltaX;
+                        int y = j + deltaY;
 
-                        threatenedSquares.add(new int[] { i, j });
+                        while (x != kingX || y != kingY) {
+                            threatenedSquares.add(new int[] { x, y });
+                            x += deltaX;
+                            y += deltaY;
+                        }
+                        threatenedSquares.add(new int[] { kingX, kingY });
                     }
                 }
             }
         }
+
         return threatenedSquares;
     }
 
-    public List<Piece> getBlockingPieces(boolean kingColour) {
-        List<int[]> threatenedSquares = getThreatenedSquares(kingColour);
+    public List<Piece> getBlockingPieces(Piece king) {
+        List<int[]> threatenedSquares = getThreatenedSquares(king.getX(), king.getY(), king.getColour());
         List<Piece> blockingPieces = new ArrayList<>();
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 Piece piece = grid[i][j];
-                if (piece != null && piece.getColour() == kingColour) {
+                if (piece != null && piece.getColour() == king.getColour() && piece != king) {
                     for (int[] square : threatenedSquares) {
                         int x = square[0];
                         int y = square[1];
@@ -154,7 +148,9 @@ public class PieceUpdate {
 
         int x = piece.getX();
         int y = piece.getY();
+        System.out.println(x + "," + y);
         boolean pieceColour = piece.getColour();
+        boolean canMove = false;
 
         for (int offsetX = -1; offsetX <= 1; offsetX++) {
             for (int offsetY = -1; offsetY <= 1; offsetY++) {
@@ -165,14 +161,18 @@ public class PieceUpdate {
                 int endX = x + offsetX;
                 int endY = y + offsetY;
 
-                if (endX >= 0 && endX <= 8 && endY >= 0 && endY <= 8) {
-                    if (!isSquareThreatened(endX, endY, pieceColour) && !piece.canMove(endX, endY)) {
-                        return true;
+                if (endX >= 0 && endX < 8 && endY >= 0 && endY < 8) {
+                    if (!isSquareThreatened(endX, endY, pieceColour)) {
+                        if (piece.canMove(endX, endY)) {
+                            canMove = true;
+                            System.out.println("King can move to: (" + endX + ", " + endY + ")");
+                        }
                     }
                 }
             }
         }
-        return false;
+
+        return canMove;
     }
 
     public void setOriginal(int originalX, int originalY, Piece piece) {

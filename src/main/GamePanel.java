@@ -159,13 +159,12 @@ public class GamePanel extends JPanel implements Runnable, MouseListener, MouseM
             if (canMove) {
                 if (pieceUpdate.checkCheck(clickedPiece) != null) {
                     king = pieceUpdate.checkCheck(clickedPiece);
-                    Boolean kingColour = king.getColour();
-                    List<Piece> blockingPieces = pieceUpdate.getBlockingPieces(kingColour);
+                    List<Piece> blockingPieces = pieceUpdate.getBlockingPieces(king);
                     check = true;
 
-                    System.out.println("Can king move around piece? " + pieceUpdate.canMoveAroundPiece(king));
-                    System.out.println("Blocking pieces: " + blockingPieces);
-                    System.out.println("Is blockingPieces empty? " + blockingPieces.isEmpty());
+                    // System.out.println("Can king move around piece? " +
+                    // pieceUpdate.canMoveAroundPiece(king));
+                    // System.out.println("Blocking pieces: " + blockingPieces);
 
                     if (!pieceUpdate.canMoveAroundPiece(king) && blockingPieces.isEmpty()) {
                         System.out.println("checkmate");
