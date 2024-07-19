@@ -101,16 +101,16 @@ public class PieceUpdate {
                             threatenedSquares.add(new int[] { kingX, kingY });
                         }
                     } else if (piece instanceof Rook || piece instanceof Queen) {
-                        addThreatsInDirection(piece, kingX, kingY, threatenedSquares, 1, 0); // Right
-                        addThreatsInDirection(piece, kingX, kingY, threatenedSquares, -1, 0); // Left
-                        addThreatsInDirection(piece, kingX, kingY, threatenedSquares, 0, 1); // Up
-                        addThreatsInDirection(piece, kingX, kingY, threatenedSquares, 0, -1); // Down
+                        addThreatsInDirection(piece, kingX, kingY, threatenedSquares, 1, 0);
+                        addThreatsInDirection(piece, kingX, kingY, threatenedSquares, -1, 0);
+                        addThreatsInDirection(piece, kingX, kingY, threatenedSquares, 0, 1);
+                        addThreatsInDirection(piece, kingX, kingY, threatenedSquares, 0, -1);
                     }
                     if (piece instanceof Bishop || piece instanceof Queen) {
-                        addThreatsInDirection(piece, kingX, kingY, threatenedSquares, 1, 1); // Up-right
-                        addThreatsInDirection(piece, kingX, kingY, threatenedSquares, 1, -1); // Up-left
-                        addThreatsInDirection(piece, kingX, kingY, threatenedSquares, -1, 1); // Down-right
-                        addThreatsInDirection(piece, kingX, kingY, threatenedSquares, -1, -1); // Down-left
+                        addThreatsInDirection(piece, kingX, kingY, threatenedSquares, 1, 1);
+                        addThreatsInDirection(piece, kingX, kingY, threatenedSquares, 1, -1);
+                        addThreatsInDirection(piece, kingX, kingY, threatenedSquares, -1, 1);
+                        addThreatsInDirection(piece, kingX, kingY, threatenedSquares, -1, -1);
                     }
                     if (piece instanceof Knight) {
                         int[][] knightMoves = {
@@ -191,16 +191,13 @@ public class PieceUpdate {
         boolean pieceColour = piece.getColour();
         boolean canMove = false;
 
-        // Get all threatened squares
         List<int[]> threatenedSquares = getThreatenedSquares(x, y, pieceColour);
         Set<String> threatenedSquaresSet = new HashSet<>();
 
-        // Convert list of threatened squares to a set for faster lookup
         for (int[] square : threatenedSquares) {
             threatenedSquaresSet.add(square[0] + "," + square[1]);
         }
 
-        // Print the contents of the threatenedSquaresSet
         System.out.println("Threatened squares:");
         for (String square : threatenedSquaresSet) {
             System.out.println(square);
@@ -215,10 +212,7 @@ public class PieceUpdate {
                 int endX = x + offsetX;
                 int endY = y + offsetY;
 
-                // Check if the target position is within bounds
                 if (endX >= 0 && endX < 8 && endY >= 0 && endY < 8) {
-                    // Check if the square is not in the threatened squares set and the king can
-                    // move there
                     if (!threatenedSquaresSet.contains(endX + "," + endY) && piece.canMove(endX, endY)) {
                         canMove = true;
                         System.out.println("King can move to: (" + endX + ", " + endY + ")");
