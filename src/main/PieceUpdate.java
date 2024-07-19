@@ -1,7 +1,10 @@
 package main;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class PieceUpdate {
     Piece[][] grid;
@@ -92,32 +95,69 @@ public class PieceUpdate {
                 if (piece != null && piece.getColour() != kingColour) {
                     if (piece instanceof Pawn) {
                         int direction = kingColour ? 1 : -1;
-                        if (i + direction >= 0 && i + direction < 8) {
-                            if ((j + 1 < 8 && i + direction == kingX && j + 1 == kingY) ||
-                                    (j - 1 >= 0 && i + direction == kingX && j - 1 == kingY)) {
-                                threatenedSquares.add(new int[] { kingX, kingY });
+                        if ((i + direction >= 0 && i + direction < 8) &&
+                                ((j + 1 < 8 && i + direction == kingX && j + 1 == kingY) ||
+                                        (j - 1 >= 0 && i + direction == kingX && j - 1 == kingY))) {
+                            threatenedSquares.add(new int[] { kingX, kingY });
+                        }
+                    } else if (piece instanceof Rook || piece instanceof Queen) {
+                        addThreatsInDirection(piece, kingX, kingY, threatenedSquares, 1, 0); // Right
+                        addThreatsInDirection(piece, kingX, kingY, threatenedSquares, -1, 0); // Left
+                        addThreatsInDirection(piece, kingX, kingY, threatenedSquares, 0, 1); // Up
+                        addThreatsInDirection(piece, kingX, kingY, threatenedSquares, 0, -1); // Down
+                    }
+                    if (piece instanceof Bishop || piece instanceof Queen) {
+                        addThreatsInDirection(piece, kingX, kingY, threatenedSquares, 1, 1); // Up-right
+                        addThreatsInDirection(piece, kingX, kingY, threatenedSquares, 1, -1); // Up-left
+                        addThreatsInDirection(piece, kingX, kingY, threatenedSquares, -1, 1); // Down-right
+                        addThreatsInDirection(piece, kingX, kingY, threatenedSquares, -1, -1); // Down-left
+                    }
+                    if (piece instanceof Knight) {
+                        int[][] knightMoves = {
+                                { 2, 1 }, { 2, -1 }, { -2, 1 }, { -2, -1 },
+                                { 1, 2 }, { 1, -2 }, { -1, 2 }, { -1, -2 }
+                        };
+                        for (int[] move : knightMoves) {
+                            int endX = kingX + move[0];
+                            int endY = kingY + move[1];
+                            if (endX >= 0 && endX < 8 && endY >= 0 && endY < 8) {
+                                threatenedSquares.add(new int[] { endX, endY });
                             }
                         }
-                    } else if (piece.canMove(kingX, kingY)) {
-                        // Handle other piece threats (queen, bishop, rook)
-                        // THIS ISNT WORKING PROPERLY YET
-                        int deltaX = Integer.signum(kingX - i);
-                        int deltaY = Integer.signum(kingY - j);
-                        int x = i + deltaX;
-                        int y = j + deltaY;
-
-                        while (x != kingX || y != kingY) {
-                            threatenedSquares.add(new int[] { x, y });
-                            x += deltaX;
-                            y += deltaY;
-                        }
-                        threatenedSquares.add(new int[] { kingX, kingY });
                     }
                 }
             }
         }
 
-        return threatenedSquares;
+        Set<String> uniqueThreatenedSquares = new HashSet<>();
+        for (int[] square : threatenedSquares) {
+            uniqueThreatenedSquares.add(square[0] + "," + square[1]);
+        }
+        return uniqueThreatenedSquares.stream()
+                .map(s -> s.split(","))
+                .map(a -> new int[] { Integer.parseInt(a[0]), Integer.parseInt(a[1]) })
+                .collect(Collectors.toList());
+    }
+
+    private void addThreatsInDirection(Piece piece, int kingX, int kingY, List<int[]> threatenedSquares, int dx,
+            int dy) {
+        int x = kingX;
+        int y = kingY;
+
+        while (true) {
+            x += dx;
+            y += dy;
+
+            if (x < 0 || x >= 8 || y < 0 || y >= 8)
+                break;
+
+            threatenedSquares.add(new int[] { x, y });
+
+            Piece targetPiece = grid[x][y];
+            if (targetPiece != null) {
+                break;
+            }
+        }
     }
 
     public List<Piece> getBlockingPieces(Piece king) {
@@ -148,9 +188,23 @@ public class PieceUpdate {
 
         int x = piece.getX();
         int y = piece.getY();
-        System.out.println(x + "," + y);
         boolean pieceColour = piece.getColour();
         boolean canMove = false;
+
+        // Get all threatened squares
+        List<int[]> threatenedSquares = getThreatenedSquares(x, y, pieceColour);
+        Set<String> threatenedSquaresSet = new HashSet<>();
+
+        // Convert list of threatened squares to a set for faster lookup
+        for (int[] square : threatenedSquares) {
+            threatenedSquaresSet.add(square[0] + "," + square[1]);
+        }
+
+        // Print the contents of the threatenedSquaresSet
+        System.out.println("Threatened squares:");
+        for (String square : threatenedSquaresSet) {
+            System.out.println(square);
+        }
 
         for (int offsetX = -1; offsetX <= 1; offsetX++) {
             for (int offsetY = -1; offsetY <= 1; offsetY++) {
@@ -161,12 +215,13 @@ public class PieceUpdate {
                 int endX = x + offsetX;
                 int endY = y + offsetY;
 
+                // Check if the target position is within bounds
                 if (endX >= 0 && endX < 8 && endY >= 0 && endY < 8) {
-                    if (!isSquareThreatened(endX, endY, pieceColour)) {
-                        if (piece.canMove(endX, endY)) {
-                            canMove = true;
-                            System.out.println("King can move to: (" + endX + ", " + endY + ")");
-                        }
+                    // Check if the square is not in the threatened squares set and the king can
+                    // move there
+                    if (!threatenedSquaresSet.contains(endX + "," + endY) && piece.canMove(endX, endY)) {
+                        canMove = true;
+                        System.out.println("King can move to: (" + endX + ", " + endY + ")");
                     }
                 }
             }
