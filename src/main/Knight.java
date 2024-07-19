@@ -68,7 +68,7 @@ public class Knight extends Piece {
 
     @Override
     public boolean check() {
-        if (pieceUpdate.getPieceAt(x + 1, y - 2) != null) {
+        if (x + 1 < 8 && y - 2 >= 0 && pieceUpdate.getPieceAt(x + 1, y - 2) != null) {
             Piece piece1 = pieceUpdate.getPieceAt(x + 1, y - 2);
             if (piece1 instanceof King) {
                 King foundKing1 = (King) piece1;
@@ -78,7 +78,7 @@ public class Knight extends Piece {
             }
         }
 
-        if (pieceUpdate.getPieceAt(x - 1, y - 2) != null) {
+        if (x - 1 >= 0 && y - 2 >= 0 && pieceUpdate.getPieceAt(x - 1, y - 2) != null) {
             Piece piece1 = pieceUpdate.getPieceAt(x - 1, y - 2);
             if (piece1 instanceof King) {
                 King foundKing1 = (King) piece1;
@@ -88,7 +88,7 @@ public class Knight extends Piece {
             }
         }
 
-        if (pieceUpdate.getPieceAt(x + 1, y + 2) != null) {
+        if (x + 1 < 8 && y + 2 < 8 && pieceUpdate.getPieceAt(x + 1, y + 2) != null) {
             Piece piece1 = pieceUpdate.getPieceAt(x + 1, y + 2);
             if (piece1 instanceof King) {
                 King foundKing1 = (King) piece1;
@@ -98,8 +98,8 @@ public class Knight extends Piece {
             }
         }
 
-        if (pieceUpdate.getPieceAt(x - 1, y + 2) != null) {
-            Piece piece1 = pieceUpdate.getPieceAt(x - 1, x + 2);
+        if (x - 1 >= 0 && y + 2 < 8 && pieceUpdate.getPieceAt(x - 1, y + 2) != null) {
+            Piece piece1 = pieceUpdate.getPieceAt(x - 1, y + 2);
             if (piece1 instanceof King) {
                 King foundKing1 = (King) piece1;
                 if (foundKing1.getColour() != colour) {
@@ -108,7 +108,7 @@ public class Knight extends Piece {
             }
         }
 
-        if (pieceUpdate.getPieceAt(x + 2, y + 1) != null) {
+        if (x + 2 < 8 && y + 1 < 8 && pieceUpdate.getPieceAt(x + 2, y + 1) != null) {
             Piece piece1 = pieceUpdate.getPieceAt(x + 2, y + 1);
             if (piece1 instanceof King) {
                 King foundKing1 = (King) piece1;
@@ -118,7 +118,7 @@ public class Knight extends Piece {
             }
         }
 
-        if (pieceUpdate.getPieceAt(x + 2, y - 1) != null) {
+        if (x + 2 < 8 && y - 1 >= 0 && pieceUpdate.getPieceAt(x + 2, y - 1) != null) {
             Piece piece1 = pieceUpdate.getPieceAt(x + 2, y - 1);
             if (piece1 instanceof King) {
                 King foundKing1 = (King) piece1;
@@ -128,7 +128,7 @@ public class Knight extends Piece {
             }
         }
 
-        if (pieceUpdate.getPieceAt(x - 2, y + 1) != null) {
+        if (x - 2 >= 0 && y + 1 < 8 && pieceUpdate.getPieceAt(x - 2, y + 1) != null) {
             Piece piece1 = pieceUpdate.getPieceAt(x - 2, y + 1);
             if (piece1 instanceof King) {
                 King foundKing1 = (King) piece1;
@@ -138,7 +138,7 @@ public class Knight extends Piece {
             }
         }
 
-        if (pieceUpdate.getPieceAt(x - 2, y - 1) != null) {
+        if (x - 2 >= 0 && y - 1 >= 0 && pieceUpdate.getPieceAt(x - 2, y - 1) != null) {
             Piece piece1 = pieceUpdate.getPieceAt(x - 2, y - 1);
             if (piece1 instanceof King) {
                 King foundKing1 = (King) piece1;

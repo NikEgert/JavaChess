@@ -206,29 +206,29 @@ public class PieceUpdate {
                     grid[i][j] = new King(i, j, true, this);
                 }
 
-                // // Bishop
-                // if (j == 0 && i == 2 || j == 0 && i == 5) {
-                // grid[i][j] = new Bishop(i, j, false, this);
+                // Bishop
+                if (j == 0 && i == 2 || j == 0 && i == 5) {
+                    grid[i][j] = new Bishop(i, j, false, this);
 
-                // } else if (j == 7 && i == 2 || j == 7 && i == 5) {
-                // grid[i][j] = new Bishop(i, j, true, this);
-                // }
+                } else if (j == 7 && i == 2 || j == 7 && i == 5) {
+                    grid[i][j] = new Bishop(i, j, true, this);
+                }
 
-                // // Knight
-                // if (j == 0 && i == 1 || j == 0 && i == 6) {
-                // grid[i][j] = new Knight(i, j, false, this);
+                // Knight
+                if (j == 0 && i == 1 || j == 0 && i == 6) {
+                    grid[i][j] = new Knight(i, j, false, this);
 
-                // } else if (j == 7 && i == 1 || j == 7 && i == 6) {
-                // grid[i][j] = new Knight(i, j, true, this);
-                // }
+                } else if (j == 7 && i == 1 || j == 7 && i == 6) {
+                    grid[i][j] = new Knight(i, j, true, this);
+                }
 
-                // // Rook
-                // if (j == 0 && i == 0 || j == 0 && i == 7) {
-                // grid[i][j] = new Rook(i, j, false, this);
+                // Rook
+                if (j == 0 && i == 0 || j == 0 && i == 7) {
+                    grid[i][j] = new Rook(i, j, false, this);
 
-                // } else if (j == 7 && i == 0 || j == 7 && i == 7) {
-                // grid[i][j] = new Rook(i, j, true, this);
-                // }
+                } else if (j == 7 && i == 0 || j == 7 && i == 7) {
+                    grid[i][j] = new Rook(i, j, true, this);
+                }
 
                 // Queen
                 if (j == 0 && i == 3) {
